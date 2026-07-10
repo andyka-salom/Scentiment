@@ -142,6 +142,9 @@ class FormController extends Controller
             'response_limit' => 'nullable|integer|min:1',
             'notify_on_response' => 'boolean',
             'grade_map' => 'nullable|array',
+            'show_customer_care' => 'boolean',
+            'customer_care_text' => 'nullable|string|max:100',
+            'customer_care_url' => 'nullable|string|max:500',
         ]);
 
         $settings = $form->settings ?? [];
@@ -159,6 +162,10 @@ class FormController extends Controller
         if ($request->has('grade_map')) {
             $settings['grade_map'] = $request->grade_map;
         }
+
+        $settings['show_customer_care'] = $request->boolean('show_customer_care');
+        $settings['customer_care_text'] = $request->customer_care_text;
+        $settings['customer_care_url'] = $request->customer_care_url;
 
         $wasPublished = $form->status !== Form::STATUS_PUBLISHED && $request->status === Form::STATUS_PUBLISHED;
 
