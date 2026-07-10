@@ -75,6 +75,8 @@ class FormController extends Controller
             'settings' => [
                 'one_response_per_user' => false,
                 'show_progress' => true,
+                'show_title' => true,
+                'show_description' => true,
                 'success_message' => 'Terima kasih! Jawaban Anda telah kami terima.',
                 'redirect_url' => null,
                 'captcha_enabled' => false,
@@ -131,6 +133,8 @@ class FormController extends Controller
             // settings
             'one_response_per_user' => 'boolean',
             'show_progress' => 'boolean',
+            'show_title' => 'boolean',
+            'show_description' => 'boolean',
             'success_message' => 'required|string|max:500',
             'redirect_url' => 'nullable|url',
             'captcha_enabled' => 'boolean',
@@ -143,6 +147,8 @@ class FormController extends Controller
         $settings = $form->settings ?? [];
         $settings['one_response_per_user'] = $request->boolean('one_response_per_user');
         $settings['show_progress'] = $request->boolean('show_progress');
+        $settings['show_title'] = $request->boolean('show_title');
+        $settings['show_description'] = $request->boolean('show_description');
         $settings['success_message'] = $request->success_message;
         $settings['redirect_url'] = $request->redirect_url;
         $settings['captcha_enabled'] = $request->boolean('captcha_enabled');

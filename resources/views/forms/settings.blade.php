@@ -38,6 +38,24 @@
                                 </select>
                             </div>
                         </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-slate-50 mt-6 pt-6">
+                            <div class="flex items-center justify-between py-2">
+                                <div>
+                                    <span class="text-sm font-semibold text-slate-700 block">Tampilkan Judul Form</span>
+                                    <span class="text-xs text-slate-500">Tampilkan judul di form publik.</span>
+                                </div>
+                                <input type="checkbox" name="show_title" value="1" {{ ($form->settings['show_title'] ?? true) ? 'checked' : '' }} class="rounded border-slate-200 text-slate-900 focus:ring-slate-900">
+                            </div>
+
+                            <div class="flex items-center justify-between py-2">
+                                <div>
+                                    <span class="text-sm font-semibold text-slate-700 block">Tampilkan Deskripsi Form</span>
+                                    <span class="text-xs text-slate-500">Tampilkan deskripsi di form publik.</span>
+                                </div>
+                                <input type="checkbox" name="show_description" value="1" {{ ($form->settings['show_description'] ?? true) ? 'checked' : '' }} class="rounded border-slate-200 text-slate-900 focus:ring-slate-900">
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Limits & Scheduling -->
