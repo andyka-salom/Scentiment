@@ -126,12 +126,12 @@
                                 </div>
                             @else
                                 <!-- Input Questions Row -->
-                                <div class="flex flex-col gap-3 py-2 border-b border-[#e8e8e8]/30 last:border-0 pb-4">
+                                <div class="flex flex-col gap-1.5 py-1.5 border-b border-[#e8e8e8]/30 last:border-0 pb-2">
                                     <div class="flex flex-col gap-[7.5px] w-full">
                                         <div class="w-full">
-                                            <label class="block text-[18px] font-medium text-black tracking-[-0.36px] leading-[1.4]">
+                                				<label class="block text-[18px] font-medium text-black tracking-[-0.36px] leading-[1.4]">
                                                 {{ $field->label }}
-                                                <span class="text-rose-500 font-bold">*</span>
+                                                @if($field->is_required)<span class="text-rose-500 font-bold">*</span>@endif
                                             </label>
                                             @if($field->description)
                                                 <p class="text-xs text-[#666] mt-1">{{ $field->description }}</p>
@@ -329,7 +329,7 @@
                 </div>
 
                 <!-- Form Submit and Customer Care Buttons -->
-                <div class="mt-4 flex flex-col gap-3 relative z-10">
+                <div class="mt-2 flex flex-col gap-3 relative z-10">
                     <button type="submit" class="w-full relative flex items-center justify-center gap-[9px] px-[13.5px] py-[10.5px] border-[0.75px] border-[rgba(255,255,255,0.3)] rounded-[6px] text-white font-medium text-[14px] tracking-[-0.154px] overflow-hidden shadow-[inset_0px_1.5px_1.5px_0px_rgba(255,255,255,0.05),inset_0px_1.5px_1.5px_0px_rgba(255,255,255,0.08)] hover:brightness-110 active:brightness-95 transition-all cursor-pointer">
                         <div aria-hidden class="absolute inset-0 pointer-events-none rounded-[6px]" style="background-image: url(&quot;data:image/svg+xml;utf8,<svg viewBox='0 0 533.25 38' xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none'><rect x='0' y='0' height='100%' width='100%' fill='url(%23grad)' opacity='0.20000000298023224'/><defs><radialGradient id='grad' gradientUnits='userSpaceOnUse' cx='0' cy='0' r='10' gradientTransform='matrix(-2.0833e-15 3.7604 -22.798 1.2525e-14 266.62 0.39583)'><stop stop-color='rgba(255,255,255,1)' offset='0'/><stop stop-color='rgba(255,255,255,0)' offset='1'/></radialGradient></defs></svg>&quot;), linear-gradient(180deg, #1e1e1e 0%, #0a0a0a 100%);"></div>
                         <span class="relative z-10">Submit</span>
