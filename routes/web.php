@@ -50,8 +50,8 @@ Route::middleware('auth')->group(function () {
 
         // Field Builder JSON Endpoints (Alpine/AJAX)
         Route::post('/forms/{form}/fields', [FieldController::class, 'store'])->name('fields.store');
-        Route::put('/forms/{form}/fields/{field}', [FieldController::class, 'update'])->name('fields.update');
         Route::put('/forms/{form}/fields/reorder', [FieldController::class, 'reorder'])->name('fields.reorder');
+        Route::put('/forms/{form}/fields/{field}', [FieldController::class, 'update'])->name('fields.update');
         Route::delete('/forms/{form}/fields/{field}', [FieldController::class, 'destroy'])->name('fields.destroy');
 
         // Responses Backoffice
