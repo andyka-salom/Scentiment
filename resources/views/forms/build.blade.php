@@ -78,7 +78,7 @@
                                     </div>
 
                                     <!-- Active State (Edit Mode) -->
-                                    <div x-show="selectedField && selectedField.id === field.id">
+                                    <template x-if="selectedField && selectedField.id === field.id">
                                         <div class="space-y-4">
                                             <div class="flex flex-col sm:flex-row gap-4">
                                                 <div class="flex-1">
@@ -177,7 +177,7 @@
                                             </div>
 
                                         </div>
-                                    </div>
+                                    </template>
 
                                 </div>
                             </div>
