@@ -131,9 +131,7 @@
                                         <div class="w-full">
                                             <label class="block text-[18px] font-medium text-black tracking-[-0.36px] leading-[1.4]">
                                                 {{ $field->label }}
-                                                @if($field->is_required)
-                                                    <span class="text-rose-500 font-bold">*</span>
-                                                @endif
+                                                <span class="text-rose-500 font-bold">*</span>
                                             </label>
                                             @if($field->description)
                                                 <p class="text-xs text-[#666] mt-1">{{ $field->description }}</p>
