@@ -88,7 +88,7 @@
                                     <!-- Active State (Edit Mode) -->
                                     <template x-if="selectedField && selectedField.id === field.id">
                                         <div class="space-y-4">
-                                            <div class="flex flex-col sm:flex-row gap-4">
+                                            <div class="flex flex-col sm:flex-row gap-4" x-show="selectedField.type !== 'button'">
                                                 <div class="flex-1">
                                                     <input type="text" x-model="selectedField.label" @input="updateFieldDebounced(selectedField)" class="w-full px-4 py-3 bg-slate-50 border-transparent focus:bg-white border focus:border-slate-300 rounded-xl text-lg font-semibold text-slate-900 focus:ring-0 placeholder:font-normal transition-colors" placeholder="Pertanyaan">
                                                 </div>
@@ -98,8 +98,12 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <!-- For button type: show only type badge -->
+                                            <div x-show="selectedField.type === 'button'" class="px-3 py-2 border border-slate-200 rounded-xl bg-slate-50 text-sm text-slate-600 font-medium">
+                                                <span x-text="getFieldTypeLabel(selectedField.type)"></span>
+                                            </div>
 
-                                            <div>
+                                            <div x-show="selectedField.type !== 'button'">
                                                 <input type="text" x-model="selectedField.description" @input="updateFieldDebounced(selectedField)" class="w-full px-4 py-2 bg-slate-50 border-transparent focus:bg-white border focus:border-slate-300 rounded-xl text-sm text-slate-600 focus:ring-0 transition-colors" placeholder="Deskripsi (Opsional)">
                                             </div>
 
@@ -160,8 +164,8 @@
                                                 </div>
                                             </div>
 
-                                            <!-- WA Button Config (universal, for any field type) -->
-                                            <div class="mt-4 border border-green-100 rounded-xl overflow-hidden">
+                                            <!-- WA Button Config (universal, hidden for button/statement types which have their own) -->
+                                            <div class="mt-4 border border-green-100 rounded-xl overflow-hidden" x-show="!['button', 'statement'].includes(selectedField.type)">
                                                 <button type="button" @click="selectedField._showWa = !selectedField._showWa"
                                                     class="w-full flex items-center justify-between px-4 py-2.5 bg-green-50 hover:bg-green-100 transition-colors text-sm font-semibold text-green-800">
                                                     <span class="flex items-center gap-2">
