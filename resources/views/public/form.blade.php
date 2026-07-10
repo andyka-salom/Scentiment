@@ -60,7 +60,7 @@
         @endif
 
         <!-- Form Content -->
-        <div class="bg-white rounded-[2rem] p-6 sm:p-10 shadow-sm border border-slate-100/50">
+        <div class="bg-white rounded-[2rem] p-8 sm:p-12 shadow-[0_8px_30px_rgba(0,0,0,0.05)] border border-slate-100/80">
             
             <!-- Header / Logo -->
             <header class="text-center mb-10">
@@ -69,11 +69,11 @@
                 </div>
                 
                 @if($form->settings['show_title'] ?? true)
-                    <h1 class="text-2xl md:text-3xl font-bold text-charcoal mb-4">{{ $form->title }}</h1>
+                    <h1 class="text-2xl md:text-3xl font-bold text-charcoal mb-4 font-serif leading-tight tracking-tight">{{ $form->title }}</h1>
                 @endif
                 
                 @if(($form->settings['show_description'] ?? true) && $form->description)
-                    <p class="text-slate-500 text-sm max-w-xl mx-auto whitespace-pre-line">{{ $form->description }}</p>
+                    <p class="text-slate-500 text-sm max-w-xl mx-auto whitespace-pre-line leading-relaxed">{{ $form->description }}</p>
                 @endif
             </header>
 
@@ -84,7 +84,7 @@
                 <input type="text" name="_hp" value="" tabindex="-1" autocomplete="off" class="opacity-0 absolute -left-[9999px] top-0 h-0 w-0" aria-hidden="true">
 
                 <!-- Dynamic fields rendered page by page -->
-                <div class="space-y-6">
+                <div class="space-y-8">
                     @foreach($form->fields as $field)
                         @php
                             $hasLogic = !empty($field->logic) && is_array($field->logic);
@@ -99,10 +99,10 @@
                                     @endif
                                 </div>
                             @elseif($field->type === 'statement')
-                                <div class="p-6 bg-[#FFF9F0] border border-orange-100 rounded-xl text-center shadow-sm">
-                                    <p class="text-sm font-semibold text-amber-900 mb-4">{{ $field->label }}</p>
+                                <div class="p-6 bg-[#FFF9F0] border border-amber-200/40 rounded-2xl text-center shadow-sm">
+                                    <p class="text-sm font-semibold text-amber-950 mb-4">{{ $field->label }} ⚠️</p>
                                     @if(isset($field->config['button_url']))
-                                        <a href="{{ $field->config['button_url'] }}" target="_blank" class="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 transition shadow-sm w-full md:w-auto">
+                                        <a href="{{ $field->config['button_url'] }}" target="_blank" class="inline-flex items-center justify-center gap-2.5 px-6 py-2.5 bg-white border border-slate-200/80 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 transition shadow-sm w-full md:w-auto">
                                             {{ $field->config['button_text'] ?? 'Click Here' }}
                                             <!-- WhatsApp Icon -->
                                             <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.571-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
@@ -111,9 +111,9 @@
                                 </div>
                             @else
                                 <!-- Input Questions -->
-                                <div class="grid grid-cols-1 md:grid-cols-[1fr_1.5fr] gap-4 md:gap-8 items-start py-2">
+                                <div class="grid grid-cols-1 md:grid-cols-[1.1fr_1.9fr] gap-4 md:gap-8 items-start py-2">
                                     <div>
-                                        <label class="block text-sm font-semibold text-charcoal pt-2 md:pt-3">
+                                        <label class="block text-[15px] font-semibold text-charcoal pt-2 md:pt-2">
                                             {{ $field->label }}
                                             @if($field->is_required)
                                                 <span class="text-rose-500 font-bold">*</span>
@@ -127,19 +127,19 @@
                                     <div class="w-full">
                                         <!-- Render inputs dynamically based on field types -->
                                         @if($field->type === 'short_text')
-                                            <input type="text" name="{{ $field->field_key }}" x-model="answers.{{ $field->field_key }}" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-gold focus:border-transparent transition shadow-sm">
+                                            <input type="text" name="{{ $field->field_key }}" x-model="answers.{{ $field->field_key }}" class="w-full px-4 py-3 bg-[#F8FAFC] border border-slate-200/80 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-gold focus:bg-white focus:border-transparent transition-all shadow-sm">
                                         @elseif($field->type === 'long_text')
-                                            <textarea name="{{ $field->field_key }}" x-model="answers.{{ $field->field_key }}" rows="4" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-gold focus:border-transparent transition shadow-sm" placeholder="Tulis di sini.."></textarea>
+                                            <textarea name="{{ $field->field_key }}" x-model="answers.{{ $field->field_key }}" rows="4" class="w-full px-4 py-3 bg-[#F8FAFC] border border-slate-200/80 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-gold focus:bg-white focus:border-transparent transition-all shadow-sm" placeholder="Tulis di sini..."></textarea>
                                         @elseif($field->type === 'number')
-                                            <input type="number" name="{{ $field->field_key }}" x-model.number="answers.{{ $field->field_key }}" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-gold focus:border-transparent transition shadow-sm">
+                                            <input type="number" name="{{ $field->field_key }}" x-model.number="answers.{{ $field->field_key }}" class="w-full px-4 py-3 bg-[#F8FAFC] border border-slate-200/80 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-gold focus:bg-white focus:border-transparent transition-all shadow-sm">
                                         @elseif($field->type === 'email')
-                                            <input type="email" name="{{ $field->field_key }}" x-model="answers.{{ $field->field_key }}" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-gold focus:border-transparent transition shadow-sm">
+                                            <input type="email" name="{{ $field->field_key }}" x-model="answers.{{ $field->field_key }}" class="w-full px-4 py-3 bg-[#F8FAFC] border border-slate-200/80 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-gold focus:bg-white focus:border-transparent transition-all shadow-sm">
                                         @elseif($field->type === 'phone')
-                                            <input type="tel" name="{{ $field->field_key }}" x-model="answers.{{ $field->field_key }}" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-gold focus:border-transparent transition shadow-sm" placeholder="Contoh: 08123456789">
+                                            <input type="tel" name="{{ $field->field_key }}" x-model="answers.{{ $field->field_key }}" class="w-full px-4 py-3 bg-[#F8FAFC] border border-slate-200/80 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-gold focus:bg-white focus:border-transparent transition-all shadow-sm" placeholder="Contoh: 08123456789">
                                         @elseif($field->type === 'radio')
                                             <div class="space-y-2">
                                                 @foreach($field->options as $opt)
-                                                    <label class="flex items-center gap-3 px-4 py-3 border border-slate-100 rounded-xl cursor-pointer hover:bg-slate-50 transition shadow-sm">
+                                                    <label class="flex items-center gap-3 px-4 py-3 bg-[#F8FAFC] border border-slate-200/50 rounded-xl cursor-pointer hover:bg-slate-100/60 transition shadow-sm">
                                                         <input type="radio" name="{{ $field->field_key }}" value="{{ $opt->value }}" x-model="answers.{{ $field->field_key }}" class="text-gold focus:ring-gold border-slate-200">
                                                         <span class="text-sm font-medium text-slate-700 flex-1">{{ $opt->label }}</span>
                                                     </label>
@@ -147,8 +147,8 @@
                                             </div>
                                         @elseif($field->type === 'dropdown')
                                             <div x-data="{ open: false, search: '', options: {{ json_encode($field->options->map(fn($o) => ['value' => $o->value, 'label' => $o->label])) }} }" class="relative" @click.outside="open = false">
-                                                <button type="button" @click="open = !open" class="w-full flex items-center justify-between px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-gold transition shadow-sm text-left">
-                                                    <span x-text="options.find(o => o.value == answers.{{ $field->field_key }})?.label || 'Pilih opsi...'" :class="answers.{{ $field->field_key }} ? 'text-charcoal' : 'text-slate-500'"></span>
+                                                <button type="button" @click="open = !open" class="w-full flex items-center justify-between px-4 py-3 bg-[#F8FAFC] border border-slate-200/80 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-gold transition shadow-sm text-left">
+                                                    <span x-text="options.find(o => o.value == answers.{{ $field->field_key }})?.label || '{{ $field->field_key === "store" ? "Pilih store kunjunganmu" : "Pilih opsi..." }}'" :class="answers.{{ $field->field_key }} ? 'text-charcoal font-medium' : 'text-slate-400 font-medium'"></span>
                                                     <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                                                 </button>
 
@@ -175,7 +175,7 @@
                                             <div class="space-y-2">
                                                 <!-- Store checkbox as array in Alpine -->
                                                 @foreach($field->options as $opt)
-                                                    <label class="flex items-center justify-between gap-3 px-4 py-3 border border-slate-100 rounded-xl cursor-pointer hover:bg-slate-50 transition shadow-sm">
+                                                    <label class="flex items-center justify-between gap-3 px-4 py-3 bg-[#F8FAFC] border border-slate-200/50 rounded-xl cursor-pointer hover:bg-slate-100/60 transition shadow-sm">
                                                         <span class="text-sm font-medium text-slate-700">{{ $opt->label }}</span>
                                                         <input type="checkbox" name="{{ $field->field_key }}[]" value="{{ $opt->value }}" x-model="answers.{{ $field->field_key }}" class="text-gold focus:ring-gold rounded border-slate-200 w-5 h-5">
                                                     </label>
@@ -190,7 +190,7 @@
                                                 <span class="text-xs text-slate-400 font-semibold">{{ $field->config['label_left'] ?? 'Sangat Buruk' }}</span>
                                                 <div class="flex gap-2">
                                                     @for($i = $min; $i <= $max; $i++)
-                                                        <label class="flex items-center justify-center h-10 w-10 border border-slate-200 rounded-full cursor-pointer hover:border-gold [&:has(input:checked)]:bg-gold [&:has(input:checked)]:text-white [&:has(input:checked)]:border-gold shadow-sm transition">
+                                                        <label class="flex items-center justify-center h-10 w-10 bg-[#F8FAFC] border border-slate-200/80 rounded-full cursor-pointer hover:border-gold [&:has(input:checked)]:bg-gold [&:has(input:checked)]:text-white [&:has(input:checked)]:border-gold shadow-sm transition">
                                                             <input type="radio" name="{{ $field->field_key }}" value="{{ $i }}" x-model="answers.{{ $field->field_key }}" class="sr-only">
                                                             <span class="text-sm font-bold">{{ $i }}</span>
                                                         </label>
@@ -202,11 +202,11 @@
                                             @php
                                                 $stars = $field->config['stars'] ?? 5;
                                             @endphp
-                                            <div class="flex gap-2 py-2">
+                                            <div class="flex gap-2.5 py-1">
                                                 @for($i = 1; $i <= $stars; $i++)
                                                     <button type="button" @click="answers.{{ $field->field_key }} = {{ $i }}" class="hover:scale-110 transition drop-shadow-sm" :class="answers.{{ $field->field_key }} >= {{ $i }} ? 'text-gold' : 'text-slate-200'">
                                                         <!-- Rounded star icon -->
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.787 1.4 8.168L12 18.896l-7.334 3.857 1.4-8.168L.132 9.21l8.2-1.192L12 .587z"/></svg>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.787 1.4 8.168L12 18.896l-7.334 3.857 1.4-8.168L.132 9.21l8.2-1.192L12 .587z"/></svg>
                                                     </button>
                                                 @endfor
                                                 <!-- Hidden input to submit the actual rating -->
@@ -248,14 +248,14 @@
                 </div>
 
                 <div class="mt-10 flex flex-col gap-4">
-                    <button type="submit" class="w-full flex items-center justify-center gap-2 px-8 py-3.5 bg-[#1C1C1C] text-white rounded-xl text-sm font-semibold hover:bg-black transition shadow-md">
+                    <button type="submit" class="w-full flex items-center justify-center gap-2.5 px-8 py-3.5 bg-black text-white rounded-xl text-sm font-semibold hover:bg-slate-900 transition-all shadow-md">
                         Submit
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                        <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
                     </button>
 
                     @if($form->settings['show_customer_care'] ?? false)
                         @php $ccUrl = $form->settings['customer_care_url'] ?? '#'; $ccText = $form->settings['customer_care_text'] ?? 'Customer Care'; @endphp
-                        <a href="{{ $ccUrl }}" target="_blank" class="w-full flex items-center justify-center gap-2 px-8 py-3.5 bg-white border border-slate-200 text-slate-700 rounded-xl text-sm font-semibold hover:bg-slate-50 transition shadow-sm">
+                        <a href="{{ $ccUrl }}" target="_blank" class="w-full flex items-center justify-center gap-2.5 px-8 py-3.5 bg-slate-50 border border-slate-200/80 text-slate-700 rounded-xl text-sm font-semibold hover:bg-slate-100 transition-all shadow-sm">
                             {{ $ccText }}
                             <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.571-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
                         </a>
