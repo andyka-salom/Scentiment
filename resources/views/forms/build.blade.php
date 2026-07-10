@@ -107,6 +107,19 @@
                                                 </div>
                                             </div>
 
+                                            <!-- Statement Config (for statement / info text type) -->
+                                            <div x-show="selectedField.type === 'statement'" class="bg-amber-50 p-4 rounded-xl space-y-3 border border-amber-100 mt-2">
+                                                <p class="text-xs font-semibold text-amber-700">Konfigurasi Tombol WA (Opsional)</p>
+                                                <div>
+                                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Teks Tombol</label>
+                                                    <input type="text" x-model="selectedField.config.button_text" @input="updateFieldDebounced(selectedField)" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm" placeholder="Contoh: Hubungi customer care via Whatsapp">
+                                                </div>
+                                                <div>
+                                                    <label class="block text-xs font-semibold text-slate-600 mb-1">URL / Nomor WhatsApp</label>
+                                                    <input type="text" x-model="selectedField.config.button_url" @input="updateFieldDebounced(selectedField)" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm" placeholder="Contoh: https://wa.me/628123456789">
+                                                </div>
+                                            </div>
+
                                             <!-- Choice Options -->
                                             <div x-show="['radio', 'checkbox', 'dropdown'].includes(selectedField.type)" class="mt-4">
                                                 <div class="space-y-2">
@@ -141,7 +154,10 @@
 
                                             <!-- Footer Actions -->
                                             <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between">
-                                                <button @click="selectField(null)" class="text-sm font-medium text-slate-500 hover:text-slate-800 px-3 py-1.5 rounded-lg hover:bg-slate-50 transition-colors">Tutup Editor</button>
+                                                <div class="flex items-center gap-2">
+                                                    <button @click="updateField(selectedField)" class="text-sm font-semibold text-white bg-slate-900 hover:bg-slate-800 px-5 py-2 rounded-xl transition-colors shadow-sm">Simpan</button>
+                                                    <button @click="selectField(null)" class="text-sm font-medium text-slate-500 hover:text-slate-800 px-4 py-2 rounded-xl hover:bg-slate-50 transition-colors">Tutup</button>
+                                                </div>
                                                 
                                                 <div class="flex items-center gap-4">
                                                     <button @click="deleteField(selectedField.id)" class="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-colors" title="Hapus Pertanyaan">

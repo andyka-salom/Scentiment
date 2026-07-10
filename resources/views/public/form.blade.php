@@ -40,6 +40,10 @@
     <style>
         body {
             background-color: #FAF7F0;
+            background-image: url('{{ asset('BG.png') }}');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             color: #2B2B2B;
         }
     </style>
@@ -55,28 +59,24 @@
             </div>
         @endif
 
-        <!-- Header / Logo -->
-        <header class="text-center mb-8">
-            <div class="flex justify-center mb-6">
-                <!-- SVG Logo representing Heaven Scent -->
-                <svg width="64" height="64" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M25 25V75M25 50H45M45 25V75" stroke="#111" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M55 75V55C55 55 65 50 75 55V75M75 55C75 55 65 60 55 55M55 25V45C55 45 65 40 75 45V25M75 45C75 45 65 50 55 45" stroke="#111" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-                    <text x="50" y="95" font-family="'Inter', sans-serif" font-size="12" font-weight="bold" fill="#111" text-anchor="middle" letter-spacing="0.1em">HEAVEN SCENT</text>
-                </svg>
-            </div>
-            
-            @if($form->settings['show_title'] ?? true)
-                <h1 class="text-2xl md:text-3xl font-bold text-charcoal mb-4">{{ $form->title }}</h1>
-            @endif
-            
-            @if(($form->settings['show_description'] ?? true) && $form->description)
-                <p class="text-slate-500 text-sm max-w-xl mx-auto whitespace-pre-line">{{ $form->description }}</p>
-            @endif
-        </header>
-
         <!-- Form Content -->
         <div class="bg-white rounded-[2rem] p-6 sm:p-10 shadow-sm border border-slate-100/50">
+            
+            <!-- Header / Logo -->
+            <header class="text-center mb-10">
+                <div class="flex justify-center mb-6">
+                    <img src="{{ asset('Logo HS - black 1.png') }}" alt="Heaven Scent Logo" class="h-16 w-auto object-contain">
+                </div>
+                
+                @if($form->settings['show_title'] ?? true)
+                    <h1 class="text-2xl md:text-3xl font-bold text-charcoal mb-4">{{ $form->title }}</h1>
+                @endif
+                
+                @if(($form->settings['show_description'] ?? true) && $form->description)
+                    <p class="text-slate-500 text-sm max-w-xl mx-auto whitespace-pre-line">{{ $form->description }}</p>
+                @endif
+            </header>
+
             <form action="{{ route('public.submit', $form->slug) }}" method="POST" id="main-form" @submit="onSubmit($event)">
                 @csrf
                 <!-- Duration tracking & Honeypot -->
@@ -99,8 +99,8 @@
                                     @endif
                                 </div>
                             @elseif($field->type === 'statement')
-                                <div class="p-6 bg-rose-50 border border-rose-100 rounded-2xl text-center">
-                                    <p class="text-sm font-medium text-rose-900 mb-4">{{ $field->label }}</p>
+                                <div class="p-6 bg-[#FFF9F0] border border-orange-100 rounded-xl text-center shadow-sm">
+                                    <p class="text-sm font-semibold text-amber-900 mb-4">{{ $field->label }}</p>
                                     @if(isset($field->config['button_url']))
                                         <a href="{{ $field->config['button_url'] }}" target="_blank" class="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 transition shadow-sm w-full md:w-auto">
                                             {{ $field->config['button_text'] ?? 'Click Here' }}
@@ -146,19 +146,38 @@
                                                 @endforeach
                                             </div>
                                         @elseif($field->type === 'dropdown')
-                                            <select name="{{ $field->field_key }}" x-model="answers.{{ $field->field_key }}" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-gold focus:border-transparent transition shadow-sm appearance-none">
-                                                <option value="">Pilih opsi...</option>
-                                                @foreach($field->options as $opt)
-                                                    <option value="{{ $opt->value }}">{{ $opt->label }}</option>
-                                                @endforeach
-                                            </select>
+                                            <div x-data="{ open: false, search: '', options: {{ json_encode($field->options->map(fn($o) => ['value' => $o->value, 'label' => $o->label])) }} }" class="relative" @click.outside="open = false">
+                                                <button type="button" @click="open = !open" class="w-full flex items-center justify-between px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-gold transition shadow-sm text-left">
+                                                    <span x-text="options.find(o => o.value == answers.{{ $field->field_key }})?.label || 'Pilih opsi...'" :class="answers.{{ $field->field_key }} ? 'text-charcoal' : 'text-slate-500'"></span>
+                                                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                                </button>
+
+                                                <div x-show="open" x-transition class="absolute z-50 w-full mt-2 bg-white border border-slate-100 rounded-xl shadow-xl overflow-hidden">
+                                                    <div class="p-2 border-b border-slate-100">
+                                                        <input type="text" x-model="search" placeholder="Cari opsi..." class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-gold transition">
+                                                    </div>
+                                                    <ul class="max-h-60 overflow-y-auto p-2 space-y-1">
+                                                        <template x-for="option in options.filter(o => o.label.toLowerCase().includes(search.toLowerCase()))" :key="option.value">
+                                                            <li>
+                                                                <button type="button" @click="answers.{{ $field->field_key }} = option.value; open = false; search = ''" class="w-full text-left px-3 py-2 text-sm rounded-lg hover:bg-gold/10 hover:text-amber-900 transition" :class="answers.{{ $field->field_key }} == option.value ? 'bg-gold/10 text-amber-900 font-semibold' : 'text-slate-700'">
+                                                                    <span x-text="option.label"></span>
+                                                                </button>
+                                                            </li>
+                                                        </template>
+                                                        <li x-show="options.filter(o => o.label.toLowerCase().includes(search.toLowerCase())).length === 0" class="px-3 py-4 text-center text-sm text-slate-400">
+                                                            Opsi tidak ditemukan
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <input type="hidden" name="{{ $field->field_key }}" :value="answers.{{ $field->field_key }}">
+                                            </div>
                                         @elseif($field->type === 'checkbox')
                                             <div class="space-y-2">
                                                 <!-- Store checkbox as array in Alpine -->
                                                 @foreach($field->options as $opt)
                                                     <label class="flex items-center justify-between gap-3 px-4 py-3 border border-slate-100 rounded-xl cursor-pointer hover:bg-slate-50 transition shadow-sm">
                                                         <span class="text-sm font-medium text-slate-700">{{ $opt->label }}</span>
-                                                        <input type="checkbox" name="{{ $field->field_key }}[]" value="{{ $opt->value }}" x-model="answers.{{ $field->field_key }}" class="text-pink-400 focus:ring-pink-400 rounded border-slate-200 w-5 h-5">
+                                                        <input type="checkbox" name="{{ $field->field_key }}[]" value="{{ $opt->value }}" x-model="answers.{{ $field->field_key }}" class="text-gold focus:ring-gold rounded border-slate-200 w-5 h-5">
                                                     </label>
                                                 @endforeach
                                             </div>
@@ -171,7 +190,7 @@
                                                 <span class="text-xs text-slate-400 font-semibold">{{ $field->config['label_left'] ?? 'Sangat Buruk' }}</span>
                                                 <div class="flex gap-2">
                                                     @for($i = $min; $i <= $max; $i++)
-                                                        <label class="flex items-center justify-center h-10 w-10 border border-slate-200 rounded-full cursor-pointer hover:border-pink-400 [&:has(input:checked)]:bg-pink-400 [&:has(input:checked)]:text-white [&:has(input:checked)]:border-pink-400 shadow-sm transition">
+                                                        <label class="flex items-center justify-center h-10 w-10 border border-slate-200 rounded-full cursor-pointer hover:border-gold [&:has(input:checked)]:bg-gold [&:has(input:checked)]:text-white [&:has(input:checked)]:border-gold shadow-sm transition">
                                                             <input type="radio" name="{{ $field->field_key }}" value="{{ $i }}" x-model="answers.{{ $field->field_key }}" class="sr-only">
                                                             <span class="text-sm font-bold">{{ $i }}</span>
                                                         </label>
@@ -185,7 +204,7 @@
                                             @endphp
                                             <div class="flex gap-2 py-2">
                                                 @for($i = 1; $i <= $stars; $i++)
-                                                    <button type="button" @click="answers.{{ $field->field_key }} = {{ $i }}" class="text-slate-200 hover:scale-110 transition drop-shadow-sm" :class="{'text-pink-400': answers.{{ $field->field_key }} >= {{ $i }}}">
+                                                    <button type="button" @click="answers.{{ $field->field_key }} = {{ $i }}" class="hover:scale-110 transition drop-shadow-sm" :class="answers.{{ $field->field_key }} >= {{ $i }} ? 'text-gold' : 'text-slate-200'">
                                                         <!-- Rounded star icon -->
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.787 1.4 8.168L12 18.896l-7.334 3.857 1.4-8.168L.132 9.21l8.2-1.192L12 .587z"/></svg>
                                                     </button>
@@ -234,10 +253,13 @@
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
                     </button>
 
-                    <a href="https://wa.me/1234567890" target="_blank" class="w-full flex items-center justify-center gap-2 px-8 py-3.5 bg-white border border-slate-200 text-slate-700 rounded-xl text-sm font-semibold hover:bg-slate-50 transition shadow-sm">
-                        Customer Care Heaven Scent
-                        <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.571-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
-                    </a>
+                    @if($form->settings['show_customer_care'] ?? false)
+                        @php $ccUrl = $form->settings['customer_care_url'] ?? '#'; $ccText = $form->settings['customer_care_text'] ?? 'Customer Care'; @endphp
+                        <a href="{{ $ccUrl }}" target="_blank" class="w-full flex items-center justify-center gap-2 px-8 py-3.5 bg-white border border-slate-200 text-slate-700 rounded-xl text-sm font-semibold hover:bg-slate-50 transition shadow-sm">
+                            {{ $ccText }}
+                            <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.571-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+                        </a>
+                    @endif
                 </div>
             </form>
         </div>
@@ -257,11 +279,15 @@
                         this.answers = JSON.parse(saved);
                     }
 
-                    // Setup checkboxes arrays in answers snapshot
+                    // Setup checkboxes arrays and initialize other fields in answers snapshot
                     @foreach($form->fields as $field)
-                        @if($field->type === 'checkbox')
-                            if (!this.answers.{{ $field->field_key }}) {
-                                this.answers.{{ $field->field_key }} = [];
+                        @if($field->type !== 'section' && $field->type !== 'statement')
+                            if (this.answers.{{ $field->field_key }} === undefined) {
+                                @if($field->type === 'checkbox')
+                                    this.answers.{{ $field->field_key }} = [];
+                                @else
+                                    this.answers.{{ $field->field_key }} = null;
+                                @endif
                             }
                         @endif
                     @endforeach

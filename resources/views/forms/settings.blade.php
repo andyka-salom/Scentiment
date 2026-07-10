@@ -105,6 +105,28 @@
                         </div>
                     </div>
 
+                    <!-- Customer Care Button Settings -->
+                    <div class="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="font-outfit font-bold text-lg text-slate-800">Tombol Customer Care</h3>
+                                <p class="text-slate-500 text-xs mt-1">Tampilkan tombol kontak di bagian bawah form publik.</p>
+                            </div>
+                            <input type="checkbox" name="show_customer_care" value="1" {{ ($form->settings['show_customer_care'] ?? false) ? 'checked' : '' }} class="rounded border-slate-200 text-slate-900 focus:ring-slate-900">
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-slate-50 pt-4">
+                            <div>
+                                <label for="customer_care_text" class="block text-sm font-semibold text-slate-700 mb-2">Teks Tombol</label>
+                                <input type="text" name="customer_care_text" id="customer_care_text" value="{{ $form->settings['customer_care_text'] ?? 'Customer Care Heaven Scent' }}" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm" placeholder="Contoh: Hubungi Kami">
+                            </div>
+                            <div>
+                                <label for="customer_care_url" class="block text-sm font-semibold text-slate-700 mb-2">URL / Nomor WhatsApp</label>
+                                <input type="text" name="customer_care_url" id="customer_care_url" value="{{ $form->settings['customer_care_url'] ?? '' }}" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm" placeholder="Contoh: https://wa.me/628123456789">
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Assessment Mode Toggle & Settings -->
                     <div class="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm" x-data="{ isAssessment: {{ $form->is_assessment ? 'true' : 'false' }} }">
                         <div class="flex items-center justify-between mb-6">

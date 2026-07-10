@@ -12,6 +12,9 @@ class HeavenScentFormSeeder extends Seeder
 {
     public function run(): void
     {
+        // 0. Clean up previous seeded data
+        Form::where('slug', 'heaven-scent-feedback')->forceDelete();
+
         // 1. Create the Form
         $form = Form::create([
             'uuid' => (string) Str::uuid(),
@@ -34,7 +37,20 @@ class HeavenScentFormSeeder extends Seeder
             'sort_order' => 1,
         ]);
         
-        $stores = ['Senayan City', 'Grand Indonesia', 'Plaza Indonesia', 'Pacific Place'];
+        $stores = [
+            'HS ROYAL', 'HS KEDIRI TOWN SQUARE', 'HS MALANG TOWN SQUARE', 'HS GRESSMALL',
+            'HS JOGJA CITY MALL', 'HS PLAZA MALIOBORO', 'HS PAKUWON SOLO', 'HS SOLO SQUARE',
+            'HS SLEMAN CITY HALL', 'HS LIPPO JEMBER', 'HS PASIFIC TEGAL', 'TPR',
+            'GUDANG JOGJA & SCH', 'GUDANG PASIFIC', 'GUDANG JEMBER', 'HS SUNCITY',
+            'HS JATOS', 'HS CIWALK', 'THE KING', 'GRAGE MALL', 'CSB', 'TSM',
+            'RITA PURWOKERTO', 'GUDANG RITA', 'CITYLINK', 'BTC', 'TP', 'PLAZA ASIA',
+            'ARTOS', 'SCM', 'PARAGON', 'THE PARK SMRG', 'SUNRISE', 'BIP', 'KEDIRI MALL',
+            'MCP', 'KCP', 'GPS', 'GGP', 'BASSURA UNIT', 'BASSURA ISLAND', 'LIPPO BOGOR',
+            'CIPUTRA CIBUBUR', 'GANDARIA CITY', 'LW GRAND WISATA', 'LW KOTA WISATA',
+            'HS CIPUTRA SEMARANG', 'FX SUDIRMAN', 'MARGO CITY', 'PTC', 'SUNCITY SDA',
+            'LIPPO BATU', 'RESINDA', 'MALANG OLYMPIC GARDEN', 'THE PARK SOLO',
+            'TSM CIBUBUR', 'HS TANGCITY'
+        ];
         foreach ($stores as $i => $store) {
             FormFieldOption::create([
                 'field_id' => $storeField->id,

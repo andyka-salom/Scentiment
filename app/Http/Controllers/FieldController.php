@@ -43,7 +43,7 @@ class FieldController extends Controller
             }
             $fieldKey = $baseKey;
             $count = 1;
-            while ($form->fields()->where('field_key', $fieldKey)->exists()) {
+            while ($form->fields()->withTrashed()->where('field_key', $fieldKey)->exists()) {
                 $fieldKey = $baseKey . '_' . $count;
                 $count++;
             }
