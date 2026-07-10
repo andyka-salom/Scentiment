@@ -127,8 +127,8 @@
                             @else
                                 <!-- Input Questions Row -->
                                 <div class="flex flex-col gap-3 py-2 border-b border-[#e8e8e8]/30 last:border-0 pb-4">
-                                    <div class="flex flex-col md:flex-row md:items-start justify-between gap-3 w-full">
-                                        <div class="flex-1 min-w-0 pr-4">
+                                    <div class="flex flex-col gap-[7.5px] w-full">
+                                        <div class="w-full">
                                             <label class="block text-[18px] font-medium text-black tracking-[-0.36px] leading-[1.4]">
                                                 {{ $field->label }}
                                                 @if($field->is_required)
@@ -140,7 +140,7 @@
                                             @endif
                                         </div>
 
-                                        <div class="w-full md:w-[262.5px] shrink-0">
+                                        <div class="w-full">
                                             <!-- Render inputs dynamically based on field types -->
                                             @if($field->type === 'short_text')
                                                 <input type="text" name="{{ $field->field_key }}" x-model="answers.{{ $field->field_key }}" class="w-full px-[13.5px] py-[9px] bg-white border border-[#e8e8e8] rounded-[6px] text-[14px] text-black placeholder-[#999] tracking-[-0.154px] focus:outline-none focus:ring-1 focus:ring-black/10 transition shadow-sm">
@@ -162,8 +162,8 @@
                                                                     <ellipse cx="223.5" cy="23.25" rx="214.5" ry="14.25" fill="url(#paint0_radial_radio_{{ $field->id }}_{{ $loop->index }})"/>
                                                                     <defs>
                                                                         <radialGradient id="paint0_radial_radio_{{ $field->id }}_{{ $loop->index }}" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(223.5 23.25) rotate(90) scale(14.25 214.5)">
-                                                                            <stop stop-color="#0A0A0A" stop-opacity="0.05"/>
-                                                                            <stop offset="1" stop-color="#0A0A0A" stop-opacity="0.02"/>
+                                                                            <stop stop-color="#0A0A0A" stop-opacity="0.03"/>
+                                                                            <stop offset="1" stop-color="#0A0A0A" stop-opacity="0.0"/>
                                                                         </radialGradient>
                                                                     </defs>
                                                                 </svg>
@@ -180,7 +180,7 @@
                                                     @endforeach
                                                 </div>
                                             @elseif($field->type === 'dropdown')
-                                                <div x-data="{ open: false, search: '', options: {{ json_encode($field->options->map(fn($o) => ['value' => $o->value, 'label' => $o->label])) }} }" class="relative" @click.outside="open = false">
+                                                <div x-data="{ open: false, search: '', options: {{ json_encode($field->options->map(fn($o) => ['value' => $o->value, 'label' => $o->label])) }} }" class="relative max-w-[262.5px] w-full" @click.outside="open = false">
                                                     <button type="button" @click="open = !open" class="w-full flex items-center justify-between px-[13.5px] py-[9px] bg-white border border-[#e8e8e8] rounded-[6px] text-[14px] focus:outline-none focus:ring-1 focus:ring-black/10 transition shadow-sm text-left relative overflow-hidden">
                                                         <!-- Ellipse shadow overlay -->
                                                         <div class="-translate-x-1/2 absolute h-[28.5px] left-1/2 top-[14.75px] w-[429px] pointer-events-none opacity-70">
@@ -188,8 +188,8 @@
                                                                 <ellipse cx="223.5" cy="23.25" rx="214.5" ry="14.25" fill="url(#paint0_radial_dropdown_{{ $field->id }})"/>
                                                                 <defs>
                                                                     <radialGradient id="paint0_radial_dropdown_{{ $field->id }}" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(223.5 23.25) rotate(90) scale(14.25 214.5)">
-                                                                        <stop stop-color="#0A0A0A" stop-opacity="0.05"/>
-                                                                        <stop offset="1" stop-color="#0A0A0A" stop-opacity="0.02"/>
+                                                                        <stop stop-color="#0A0A0A" stop-opacity="0.03"/>
+                                                                        <stop offset="1" stop-color="#0A0A0A" stop-opacity="0.0"/>
                                                                     </radialGradient>
                                                                 </defs>
                                                             </svg>
@@ -230,8 +230,8 @@
                                                                     <ellipse cx="223.5" cy="23.25" rx="214.5" ry="14.25" fill="url(#paint0_radial_checkbox_{{ $field->id }}_{{ $loop->index }})"/>
                                                                     <defs>
                                                                         <radialGradient id="paint0_radial_checkbox_{{ $field->id }}_{{ $loop->index }}" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(223.5 23.25) rotate(90) scale(14.25 214.5)">
-                                                                            <stop stop-color="#0A0A0A" stop-opacity="0.05"/>
-                                                                            <stop offset="1" stop-color="#0A0A0A" stop-opacity="0.02"/>
+                                                                            <stop stop-color="#0A0A0A" stop-opacity="0.03"/>
+                                                                            <stop offset="1" stop-color="#0A0A0A" stop-opacity="0.0"/>
                                                                         </radialGradient>
                                                                     </defs>
                                                                 </svg>
