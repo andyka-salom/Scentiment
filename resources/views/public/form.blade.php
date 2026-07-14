@@ -167,30 +167,87 @@
                                             @elseif($field->type === 'radio')
                                                 <div class="space-y-[6px]">
                                                     @foreach($field->options as $opt)
-                                                        <label class="flex items-center justify-between px-[13.5px] py-[9px] bg-white border border-[#e8e8e8] border-[0.75px] rounded-[6px] cursor-pointer hover:bg-slate-50 transition w-full relative overflow-hidden">
-                                                            <!-- Ellipse shadow overlay -->
-                                                            <div class="-translate-x-1/2 absolute h-[28.5px] left-1/2 top-[21px] w-[429px] pointer-events-none opacity-[0.5] mix-blend-multiply">
-                                                                <svg preserveAspectRatio="none" viewBox="0 0 447 46.5" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
-                                                                    <ellipse cx="223.5" cy="23.25" rx="214.5" ry="14.25" fill="url(#paint0_radial_radio_{{ $field->id }}_{{ $loop->index }})"/>
-                                                                    <defs>
-                                                                        <radialGradient id="paint0_radial_radio_{{ $field->id }}_{{ $loop->index }}" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(223.5 23.25) rotate(90) scale(14.25 214.5)">
-                                                                            <stop stop-color="#0A0A0A" stop-opacity="0.03"/>
-                                                                            <stop offset="1" stop-color="#0A0A0A" stop-opacity="0.0"/>
-                                                                        </radialGradient>
-                                                                    </defs>
-                                                                </svg>
-                                                            </div>
-
-                                                            <span class="text-[14px] text-[#424242] font-normal tracking-[-0.154px] z-10">{{ $opt->label }}</span>
-                                                            <div class="flex items-center z-10">
-                                                                <input type="radio" name="{{ $field->field_key }}" value="{{ $opt->value }}" x-model="answers.{{ $field->field_key }}" class="sr-only">
-                                                                <div class="w-[15px] h-[15px] border-[#d5d7da] border-[0.75px] rounded-full flex items-center justify-center bg-white transition-all" :class="answers.{{ $field->field_key }} == '{{ $opt->value }}' ? 'border-black bg-black' : 'border-[#d5d7da]'">
-                                                                    <div class="w-[5px] h-[5px] rounded-full bg-white" x-show="answers.{{ $field->field_key }} == '{{ $opt->value }}'"></div>
+                                                        @if($opt->value === 'lainnya')
+                                                            <!-- Special Lainnya Option -->
+                                                            <label @click="selectRadio('{{ $field->field_key }}', 'lainnya')"
+                                                                class="flex bg-white border border-[#e8e8e8] border-[0.75px] rounded-[6px] cursor-pointer hover:bg-slate-50 transition w-full relative overflow-hidden px-[13.5px] py-[9px]"
+                                                                :class="isRadioSelected('{{ $field->field_key }}', 'lainnya') ? 'flex-col items-start gap-[8px]' : 'flex-row items-center justify-between'">
+                                                                <!-- Top row / Header -->
+                                                                <div class="flex items-center justify-between w-full z-10">
+                                                                    <span class="text-[14px] text-[#424242] font-normal tracking-[-0.154px]">{{ $opt->label }}</span>
+                                                                    <div class="flex items-center">
+                                                                        <input type="radio" :checked="isRadioSelected('{{ $field->field_key }}', 'lainnya')" class="sr-only">
+                                                                        <div class="w-[15px] h-[15px] border-[#d5d7da] border-[0.75px] rounded-full flex items-center justify-center bg-white transition-all" :class="isRadioSelected('{{ $field->field_key }}', 'lainnya') ? 'border-black bg-black' : 'border-[#d5d7da]'">
+                                                                            <div class="w-[5px] h-[5px] rounded-full bg-white" x-show="isRadioSelected('{{ $field->field_key }}', 'lainnya')"></div>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </label>
+
+                                                                <!-- Textarea (Only visible when selected) -->
+                                                                <div x-show="isRadioSelected('{{ $field->field_key }}', 'lainnya')" x-transition class="w-full z-10 relative" @click.stop>
+                                                                    <!-- Inner input box container matching figma -->
+                                                                    <div class="bg-white border-[#e8e8e8] border-[0.75px] border-solid flex items-center overflow-hidden relative rounded-[6px] w-full">
+                                                                        <!-- Ellipse shadow overlay inside input -->
+                                                                        <div class="-translate-x-1/2 absolute h-[28.5px] left-1/2 top-[21px] w-[429px] pointer-events-none opacity-[0.5] mix-blend-multiply">
+                                                                            <svg preserveAspectRatio="none" viewBox="0 0 447 46.5" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+                                                                                <ellipse cx="223.5" cy="23.25" rx="214.5" ry="14.25" fill="url(#paint0_radial_radio_other_{{ $field->id }})"/>
+                                                                                <defs>
+                                                                                    <radialGradient id="paint0_radial_radio_other_{{ $field->id }}" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(223.5 23.25) rotate(90) scale(14.25 214.5)">
+                                                                                        <stop stop-color="#0A0A0A" stop-opacity="0.03"/>
+                                                                                        <stop offset="1" stop-color="#0A0A0A" stop-opacity="0.0"/>
+                                                                                    </radialGradient>
+                                                                                </defs>
+                                                                            </svg>
+                                                                        </div>
+                                                                        
+                                                                        <textarea
+                                                                            :value="typeof answers.{{ $field->field_key }} === 'object' && answers.{{ $field->field_key }} !== null ? answers.{{ $field->field_key }}.other : ''"
+                                                                            @input="updateRadioOther('{{ $field->field_key }}', $event.target.value)"
+                                                                            class="w-full px-[13.5px] py-[9px] bg-transparent text-[14px] text-[#424242] placeholder-[#999] tracking-[-0.154px] focus:outline-none resize-none h-[67px] relative z-10 font-normal leading-[1.2]"
+                                                                            placeholder="Tulis di sini..."
+                                                                        ></textarea>
+                                                                    </div>
+                                                                </div>
+                                                            </label>
+                                                        @else
+                                                            <!-- Regular Option -->
+                                                            <label @click="selectRadio('{{ $field->field_key }}', '{{ $opt->value }}')"
+                                                                class="flex items-center justify-between px-[13.5px] py-[9px] bg-white border border-[#e8e8e8] border-[0.75px] rounded-[6px] cursor-pointer hover:bg-slate-50 transition w-full relative overflow-hidden">
+                                                                <!-- Ellipse shadow overlay -->
+                                                                <div class="-translate-x-1/2 absolute h-[28.5px] left-1/2 top-[21px] w-[429px] pointer-events-none opacity-[0.5] mix-blend-multiply">
+                                                                    <svg preserveAspectRatio="none" viewBox="0 0 447 46.5" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+                                                                        <ellipse cx="223.5" cy="23.25" rx="214.5" ry="14.25" fill="url(#paint0_radial_radio_{{ $field->id }}_{{ $loop->index }})"/>
+                                                                        <defs>
+                                                                            <radialGradient id="paint0_radial_radio_{{ $field->id }}_{{ $loop->index }}" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(223.5 23.25) rotate(90) scale(14.25 214.5)">
+                                                                                <stop stop-color="#0A0A0A" stop-opacity="0.03"/>
+                                                                                <stop offset="1" stop-color="#0A0A0A" stop-opacity="0.0"/>
+                                                                            </radialGradient>
+                                                                        </defs>
+                                                                    </svg>
+                                                                </div>
+
+                                                                <span class="text-[14px] text-[#424242] font-normal tracking-[-0.154px] z-10">{{ $opt->label }}</span>
+                                                                <div class="flex items-center z-10">
+                                                                    <input type="radio" :checked="isRadioSelected('{{ $field->field_key }}', '{{ $opt->value }}')" class="sr-only">
+                                                                    <div class="w-[15px] h-[15px] border-[#d5d7da] border-[0.75px] rounded-full flex items-center justify-center bg-white transition-all" :class="isRadioSelected('{{ $field->field_key }}', '{{ $opt->value }}') ? 'border-black bg-black' : 'border-[#d5d7da]'">
+                                                                        <div class="w-[5px] h-[5px] rounded-full bg-white" x-show="isRadioSelected('{{ $field->field_key }}', '{{ $opt->value }}')"></div>
+                                                                    </div>
+                                                                </div>
+                                                            </label>
+                                                        @endif
                                                     @endforeach
                                                 </div>
+
+                                                <!-- Dynamic hidden inputs for validation and form submission -->
+                                                <template x-if="!isRadioSelected('{{ $field->field_key }}', 'lainnya')">
+                                                    <input type="hidden" name="{{ $field->field_key }}" :value="answers.{{ $field->field_key }}">
+                                                </template>
+                                                <template x-if="isRadioSelected('{{ $field->field_key }}', 'lainnya')">
+                                                    <div>
+                                                        <input type="hidden" name="{{ $field->field_key }}[value]" value="__other__">
+                                                        <input type="hidden" name="{{ $field->field_key }}[other]" :value="typeof answers.{{ $field->field_key }} === 'object' && answers.{{ $field->field_key }} !== null ? answers.{{ $field->field_key }}.other : ''">
+                                                    </div>
+                                                </template>
                                             @elseif($field->type === 'dropdown')
                                                 <div x-data="{ open: false, search: '', options: {{ json_encode($field->options->map(fn($o) => ['value' => $o->value, 'label' => $o->label])) }} }" class="relative max-w-[262.5px] w-full" @click.outside="open = false">
                                                     <button type="button" @click="open = !open" class="w-full flex items-center justify-between px-[13.5px] py-[9px] bg-white border border-[#e8e8e8] rounded-[6px] text-[14px] focus:outline-none focus:ring-1 focus:ring-black/10 transition shadow-sm text-left relative overflow-hidden">
@@ -431,6 +488,34 @@
                     this.timer = setInterval(() => {
                         this.duration++;
                     }, 1000);
+                },
+                isRadioSelected(fieldKey, value) {
+                    const val = this.answers[fieldKey];
+                    if (val === undefined || val === null) return false;
+                    if (value === 'lainnya') {
+                        if (val === 'lainnya') return true;
+                        if (typeof val === 'object' && val !== null && val.value === '__other__') return true;
+                        return false;
+                    }
+                    if (typeof val === 'object' && val !== null) {
+                        return val.value === value;
+                    }
+                    return val === value;
+                },
+                selectRadio(fieldKey, value) {
+                    if (value === 'lainnya') {
+                        const val = this.answers[fieldKey];
+                        if (typeof val === 'object' && val !== null && val.value === '__other__') {
+                            // Keep existing structure
+                        } else {
+                            this.answers[fieldKey] = { value: '__other__', other: '' };
+                        }
+                    } else {
+                        this.answers[fieldKey] = value;
+                    }
+                },
+                updateRadioOther(fieldKey, text) {
+                    this.answers[fieldKey] = { value: '__other__', other: text };
                 },
                 evaluateLogic(logic) {
                     if (!logic || !logic.condition) return true;

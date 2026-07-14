@@ -96,10 +96,11 @@ class HeavenScentFormSeeder extends Seeder
         $feedbackTypeField = FormField::create([
             'form_id' => $form->id,
             'field_key' => 'feedback_type',
-            'type' => 'checkbox',
+            'type' => 'radio',
             'label' => 'Apa yang paling ingin anda berikan feedback?',
             'is_required' => false,
             'sort_order' => 4,
+            'config' => ['allow_other' => true],
         ]);
 
         $feedbackTypes = ['Produk', 'Kondisi Toko', 'Pelayanan', 'Lainnya'];
