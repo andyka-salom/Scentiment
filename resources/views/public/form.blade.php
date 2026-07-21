@@ -145,7 +145,7 @@
                                         <div class="w-full">
                                 				<label class="block text-[18px] font-medium text-black tracking-[-0.36px] leading-[1.4]">
                                                 {{ $field->label }}
-                                                @if($field->is_required)<span class="text-rose-500 font-bold">*</span>@endif
+                                                <span class="text-rose-500 font-bold">*</span>
                                             </label>
                                             @if($field->description)
                                                 <p class="text-xs text-[#666] mt-1">{{ $field->description }}</p>
@@ -155,15 +155,15 @@
                                         <div class="w-full">
                                             <!-- Render inputs dynamically based on field types -->
                                             @if($field->type === 'short_text')
-                                                <input type="text" name="{{ $field->field_key }}" x-model="answers.{{ $field->field_key }}" class="w-full px-[13.5px] py-[9px] bg-white border border-[#e8e8e8] rounded-[6px] text-[14px] text-black placeholder-[#999] tracking-[-0.154px] focus:outline-none focus:ring-1 focus:ring-black/10 transition shadow-sm">
+                                                <input type="text" name="{{ $field->field_key }}" x-model="answers.{{ $field->field_key }}" :required="{{ !empty($field->logic) && is_array($field->logic) ? 'evaluateLogic(' . json_encode($field->logic) . ')' : 'true' }}" class="w-full px-[13.5px] py-[9px] bg-white border border-[#e8e8e8] rounded-[6px] text-[14px] text-black placeholder-[#999] tracking-[-0.154px] focus:outline-none focus:ring-1 focus:ring-black/10 transition shadow-sm">
                                             @elseif($field->type === 'long_text')
-                                                <textarea name="{{ $field->field_key }}" x-model="answers.{{ $field->field_key }}" class="w-full px-[13.5px] py-[10.5px] pb-[75px] bg-white border border-[#e8e8e8] rounded-[6px] text-[14px] text-black placeholder-[#999] tracking-[-0.154px] focus:outline-none focus:ring-1 focus:ring-black/10 transition shadow-sm resize-none" placeholder="Tulis di sini..."></textarea>
+                                                <textarea name="{{ $field->field_key }}" x-model="answers.{{ $field->field_key }}" :required="{{ !empty($field->logic) && is_array($field->logic) ? 'evaluateLogic(' . json_encode($field->logic) . ')' : 'true' }}" class="w-full px-[13.5px] py-[10.5px] pb-[75px] bg-white border border-[#e8e8e8] rounded-[6px] text-[14px] text-black placeholder-[#999] tracking-[-0.154px] focus:outline-none focus:ring-1 focus:ring-black/10 transition shadow-sm resize-none" placeholder="Tulis di sini..."></textarea>
                                             @elseif($field->type === 'number')
-                                                <input type="number" name="{{ $field->field_key }}" x-model.number="answers.{{ $field->field_key }}" class="w-full px-[13.5px] py-[9px] bg-white border border-[#e8e8e8] rounded-[6px] text-[14px] text-black placeholder-[#999] tracking-[-0.154px] focus:outline-none focus:ring-1 focus:ring-black/10 transition shadow-sm">
+                                                <input type="number" name="{{ $field->field_key }}" x-model.number="answers.{{ $field->field_key }}" :required="{{ !empty($field->logic) && is_array($field->logic) ? 'evaluateLogic(' . json_encode($field->logic) . ')' : 'true' }}" class="w-full px-[13.5px] py-[9px] bg-white border border-[#e8e8e8] rounded-[6px] text-[14px] text-black placeholder-[#999] tracking-[-0.154px] focus:outline-none focus:ring-1 focus:ring-black/10 transition shadow-sm">
                                             @elseif($field->type === 'email')
-                                                <input type="email" name="{{ $field->field_key }}" x-model="answers.{{ $field->field_key }}" class="w-full px-[13.5px] py-[9px] bg-white border border-[#e8e8e8] rounded-[6px] text-[14px] text-black placeholder-[#999] tracking-[-0.154px] focus:outline-none focus:ring-1 focus:ring-black/10 transition shadow-sm">
+                                                <input type="email" name="{{ $field->field_key }}" x-model="answers.{{ $field->field_key }}" :required="{{ !empty($field->logic) && is_array($field->logic) ? 'evaluateLogic(' . json_encode($field->logic) . ')' : 'true' }}" class="w-full px-[13.5px] py-[9px] bg-white border border-[#e8e8e8] rounded-[6px] text-[14px] text-black placeholder-[#999] tracking-[-0.154px] focus:outline-none focus:ring-1 focus:ring-black/10 transition shadow-sm">
                                             @elseif($field->type === 'phone')
-                                                <input type="tel" name="{{ $field->field_key }}" x-model="answers.{{ $field->field_key }}" class="w-full px-[13.5px] py-[9px] bg-white border border-[#e8e8e8] rounded-[6px] text-[14px] text-black placeholder-[#999] tracking-[-0.154px] focus:outline-none focus:ring-1 focus:ring-black/10 transition shadow-sm" placeholder="Contoh: 08123456789">
+                                                <input type="tel" name="{{ $field->field_key }}" x-model="answers.{{ $field->field_key }}" :required="{{ !empty($field->logic) && is_array($field->logic) ? 'evaluateLogic(' . json_encode($field->logic) . ')' : 'true' }}" class="w-full px-[13.5px] py-[9px] bg-white border border-[#e8e8e8] rounded-[6px] text-[14px] text-black placeholder-[#999] tracking-[-0.154px] focus:outline-none focus:ring-1 focus:ring-black/10 transition shadow-sm" placeholder="Contoh: 08123456789">
                                             @elseif($field->type === 'radio')
                                                 <div class="space-y-[6px]">
                                                     @foreach($field->options as $opt)
@@ -535,6 +535,53 @@
                     return true;
                 },
                 onSubmit(event) {
+                    const notyf = new Notyf({ position: {x: 'center', y: 'top'} });
+                    let errors = [];
+
+                    @foreach($form->fields as $field)
+                        @if($field->type !== 'section' && $field->type !== 'statement' && $field->type !== 'button' && $field->type !== 'wa_button')
+                            @php
+                                $hasLogic = !empty($field->logic) && is_array($field->logic);
+                            @endphp
+                            
+                            // Validate if visible
+                            if (@json(!$hasLogic) || this.evaluateLogic({{ json_encode($field->logic) }})) {
+                                const val = this.answers.{{ $field->field_key }};
+                                let isValid = true;
+                                
+                                @if($field->type === 'checkbox')
+                                    if (!Array.isArray(val) || val.length === 0) {
+                                        isValid = false;
+                                    }
+                                @elseif($field->type === 'radio')
+                                    if (val === undefined || val === null || val === '') {
+                                        isValid = false;
+                                    } else if (typeof val === 'object' && val !== null) {
+                                        if (val.value === '__other__' && (!val.other || val.other.trim() === '')) {
+                                            isValid = false;
+                                        }
+                                    }
+                                @else
+                                    if (val === undefined || val === null || (typeof val === 'string' && val.trim() === '')) {
+                                        isValid = false;
+                                    }
+                                @endif
+                                
+                                if (!isValid) {
+                                    errors.push('{{ $field->label }}');
+                                }
+                            }
+                        @endif
+                    @endforeach
+
+                    if (errors.length > 0) {
+                        event.preventDefault();
+                        errors.forEach(err => {
+                            notyf.error('Pertanyaan "' + err + '" wajib diisi.');
+                        });
+                        return;
+                    }
+
                     // Stop timer
                     clearInterval(this.timer);
                     // Clear local storage draft
